@@ -1,6 +1,12 @@
 # fingerprint_scanner_python
 
 # install
+
+### thư viện python
+
+    https://github.com/fananimi/pyzk
+    https://github.com/AlSayedGamal/python_zklib
+
 ### install postgresql
     docker run --name db -e POSTGRES_PASSWORD=123 -d -p 5432:5432 postgres:latest
 	-----
@@ -35,4 +41,6 @@
     python pushdata.py
 
 file pushdata chạy liên tục để đẩy dữ liệu trên máy chấm công về cơ sở dữ liệu, file control.py đọc dữ liệu trong cơ sở dữ liệu và hiển thị.
+
+
 
