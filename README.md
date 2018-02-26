@@ -1,5 +1,3 @@
-# fingerprint_scanner_python
-
 # install
 
 ### thư viện python
@@ -10,7 +8,7 @@
 ### install postgresql
     docker run --name db -e POSTGRES_PASSWORD=123 -d -p 5432:5432 postgres:latest
 	-----
-    docker exec -it -u postgres db psql [ docker exec -it -u postgres db psql] 
+    docker exec -it -u postgres db psql 
 	-----
     create table datatable (
     numerical int primary key not null,
@@ -37,10 +35,8 @@
 ### chạy ứng dụng
     git clone https://github.com/long25vn/fingerprint_scanner_python.git
     cd fingerprint_scanner_python/
-    ./rsh
+    ./run.sh
 
 file pushdata chạy liên tục để đẩy dữ liệu trên máy chấm công về cơ sở dữ liệu, file control.py đọc dữ liệu trong cơ sở dữ liệu và hiển thị.
 
-#### chức năng và các hàm sử dụng note trong code, file control.py
-
-
+### chức năng và các hàm sử dụng note trong code, file control.py
