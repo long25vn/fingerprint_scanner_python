@@ -1,0 +1,71 @@
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>User</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <style>
+    body {
+      font-family: Arial;
+    }
+    input.MyButton {
+      width: 150px;
+      padding: 10px;
+      cursor: pointer;
+      font-size: 100%;
+      background: #337ab7;
+      color: #fff;
+      border: 1px solid #337ab7;
+      border-radius: 5px;
+      float: right;
+      margin: 10px;
+    }
+    input.MyButton:hover {
+      color: #fff;
+      background: #0270cf;
+      border: 1px solid #fff;
+    }
+  </style>
+</head>
+<body>  
+  <input type="button" class="MyButton" value="Logout" onclick="window.location.href='/logout'" /></h3>
+  <h2 style="color: #337ab7; font-size: 2.4em ">Users List</h2>    
+  <table id="example" class="display" cellspacing="0" width="100%">
+    <thead>
+      <tr style="text-align:left">
+        <th></th>
+        <th>UID</th>
+        <th>ID</th>
+        <th>Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for a in user %}
+      <tr>
+        <th></th>
+        <td>{{ a[0] }}</td>
+        <td>{{ a[1] }}</td>
+        <td>{{ a[2] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <script>
+   $(document).ready(function() {
+    $('#example').DataTable( {
+      "pagingType": "full_numbers"
+    } );
+  } );
+</script>
+<script>
+  document.getElementById("timenow").innerHTML = Date();
+  Date.prototype.getWeek = function() {
+    var jan4th = new Date(this.getFullYear(),0,4);
+    return Math.ceil((((this - jan4th) / 86400000) + jan4th.getDay()+1)/7);
+  }
+  var now = new Date();
+  var weekNumber = now.getWeek();
+  document.getElementById("week").innerHTML = weekNumber;
+</script>
+</body>

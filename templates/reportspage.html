@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Update</title>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+  <style>
+      input.MyButton {
+          width: 100px;
+          padding: 10px;
+          cursor: pointer;
+          /* font-weight: bold; */
+          font-size: 100%;
+          background: #337ab7;
+          color: #fff;
+          border: 1px solid #337ab7;
+          border-radius: 5px;
+          float: right;
+          margin: 10px;
+      }
+      input.MyButton:hover {
+      color: #fff;
+      background: #0270cf;
+      border: 1px solid #fff;
+      }
+  </style>
+</head>
+<body>
+  <input type="button" class="MyButton" value="User" onclick="window.location.href='/user'" />
+  <input type="button" class="MyButton" value="Login" onclick="window.location.href='/auth'" />
+  <h2 style="color:#147698">Trạng thái kết nối: </h2>
+  <h3 style="color:#147698"><span id="timenow"></span> Week: <span id="week"></span>  
+  </h3>
+  <table id="example" class="display" cellspacing="0" width="100%">
+    <thead>
+      <tr>
+        <th></th>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Date</th>
+        <th>Time in</th>
+        <th>Time out</th>
+        <th>State</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for a in reports %}
+      <tr>
+        <th></th>
+        <td>{{ a[0] }}</td>
+        <td>{{ a[1] }}</td>
+        <td>{{ a[2] }}</td>
+        <td>{{ a[3] }}</td>
+        <td>{{ a[4] }}</td>
+        <td>{{ a[5] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div style="width: 500px;">
+  <p style="color:#000000bd"><i>Một ID xác nhận nhiều lần trong 30 phút sẽ được thông báo là "Trùng lặp" và chỉ ghi nhận lần xác nhận đầu tiên</i></p>
+  </div>
+  <input style="width: 220px;" type="button" class="MyButton" value="Dữ liệu thống kê" onclick="window.location.href='/get'" />
+  <script>
+   $(document).ready(function() {
+    $('#example').DataTable( {
+      "pagingType": "full_numbers"
+    } );
+  } );
+  </script>
+  <script>
+  document.getElementById("timenow").innerHTML = Date();
+  Date.prototype.getWeek = function() {
+  var jan4th = new Date(this.getFullYear(),0,4);
+  return Math.ceil((((this - jan4th) / 86400000) + jan4th.getDay()+1)/7);
+  }
+  var now = new Date();
+  var weekNumber = now.getWeek();
+  document.getElementById("week").innerHTML = weekNumber;
+  </script>
+</body>

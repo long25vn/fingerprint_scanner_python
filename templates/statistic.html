@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Statistic</title>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+  <style>
+  input.MyButton {
+    width: 150px;
+    padding: 10px;
+    cursor: pointer;
+    /* font-weight: bold; */
+    font-size: 100%;
+    background: #337ab7;
+    color: #fff;
+    border: 1px solid #337ab7;
+    border-radius: 5px;
+    float: right;
+    margin: 10px;
+  }
+  input.MyButton:hover {
+    color: #fff;
+    background: #0270cf;
+    border: 1px solid #fff;
+  }
+
+  .modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1;
+    padding-top: 100px; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgb(0,0,0); 
+    background-color: rgba(0,0,0,0.4); 
+  }
+
+  .modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 80%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+  }
+
+  @-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0} 
+    to {top:0; opacity:1}
+  }
+  @keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+  }
+  .close {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .modal-header {
+    padding: 2px 16px;
+    background-color: #337ab7;
+    color: white;
+  }
+
+  .modal-body {padding: 2px 16px;}
+
+  .modal-footer {
+    padding: 2px 16px;
+    background-color: #337ab7;
+    color: white;
+  }
+  .MyButton {
+    width: 150px;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 100%;
+    background: #337ab7;
+    color: #fff;
+    border: 1px solid #337ab7;
+    border-radius: 5px;
+    float: right;
+    margin: 10px;
+  }
+  .MyButton:hover {
+    color: #fff;
+    background: #0270cf;
+    border: 1px solid #fff;
+  }
+</style>
+</head>
+<body>
+  <input type="button" class="MyButton" value="Return Home" onclick="window.location.href='/logout'" />
+  <h1 style="color:#147698"> Dữ liệu thống kê từ 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    
+    {% for message in messages %}
+    {% if "Error" not in message[1]: %}
+    <div class="alert alert-info">
+      <strong> </strong> {{ message[1] }}
+    </div>
+    {% endif %}
+    
+    {% if "Error" in message[1]: %}
+    <div class="alert alert-warning">
+      {{ message[1] }}
+    </div>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+  </h1>
+  <table id="example" class="display" cellspacing="0" width="100%">
+    <thead>
+      <tr style="text-align:left; padding: 10px 0px;">
+        <th></th>
+        <th>ID</th>
+        <th>Tên</th>
+        <th>Tổng số ngày đi học</th>
+        <th>Tổng thời gian đi muộn</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for a in statistic %}
+      <tr>
+        <th></th>
+        <td>{{ a[0] }}</td>
+        <td>{{ a[1] }}</td>
+        <td>{{ a[2] }}</td>
+        <td>{{ a[3] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <h2 style="color:#147698">Nhập ngày trước khi GET để lấy Dữ liệu thống kê</h2>
+
+  <script>
+   $(document).ready(function() {
+    $('#example').DataTable( {
+      "pagingType": "full_numbers"
+    } );
+  } );
+</script>
+<script>
+  document.getElementById("timenow").innerHTML = Date();
+  Date.prototype.getWeek = function() {
+    var jan4th = new Date(this.getFullYear(),0,4);
+    return Math.ceil((((this - jan4th) / 86400000) + jan4th.getDay()+1)/7);
+  }
+  var now = new Date();
+  var weekNumber = now.getWeek();
+  document.getElementById("week").innerHTML = weekNumber;
+</script>
+
+<button id="myBtn" class="MyButton">Hướng dẫn</button>
+
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close">&times;</span>
+      <h2>Hướng dẫn</h2>
+    </div>
+    <div class="modal-body">
+      <p>Chào các bạn. Chúc các bạn một ngày vui vẻ!</p>
+      
+      <p>Dữ liệu vân tay được sử dụng để theo dõi thời gian học tập của các bạn. </p>
+      <p>Thời gian sẽ được tính mỗi khi quét vân tay.</p>
+      <p>Mỗi ngày các bạn quét 2 lần: lúc đến lớp và lúc ra về. (Time in và time out)</p>
+      <p>Nếu quét sau 09:00:00, 14:00:00 sẽ tính thời gian đi muộn.</p>
+      <p><b>Tổng thời gian từ lúc đến lớp và lúc ra về: (Timeout trừ timein)</b></p>
+      <p style="text-indent: 50px;">Nếu lớn hơn 3h sẽ tính một buổi sáng/chiều. </p>
+      <p style="text-indent: 50px;">Nếu lớn hơn 8h sẽ tính cả ngày (cộng cả 2 tiếng nghỉ trưa).</p>
+      <p style="text-indent: 50px;">Nếu nhỏ hơn 3h hoặc quên không quét lúc đến lớp hoặc lúc ra về sẽ tính là quét thiếu.</p>
+      
+      <p>* Nếu các bạn quét nhiều lần trong ngày, lần đầu tính là time in - lần cuối là time out </p>
+    </div>
+    <div class="modal-footer">
+      <h3>Techmaster</h3>
+    </div>
+  </div>
+
+</div>
+<script>
+  var modal = document.getElementById('myModal');
+  var btn = document.getElementById("myBtn");
+  var span = document.getElementsByClassName("close")[0];
+  btn.onclick = function() {
+    modal.style.display = "block";
+  }
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+</script>
+</body>
