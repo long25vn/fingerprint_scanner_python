@@ -34,10 +34,6 @@ data_user = zk.getUser()
 zkteco_users = zkteco.get_users()
 attendance = zk.getAttendance()
 
-for uid in data_user:
-	y.insert(0,(str(uid), str(data_user[uid][0]), str(data_user[uid][1]), int(data_user[uid][2]), str(data_user[uid][3]))) 
-
-
 ######### tao ung dung FLASK ###############################################
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -159,7 +155,12 @@ def statistic():
 def user():
     if not session.get('logged_in'):
         return render_template('login.html')
-    else:    
+    else:
+        y = []
+        cur.execute("SELECT * FROM usertable")
+        rows3 = cur.fetchall() 
+        for data in rows3:
+            y.insert(0,(data[0],data[1],data[2],data[3]))
         return render_template('user.html', user=y)
  
 
