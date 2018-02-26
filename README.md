@@ -21,6 +21,14 @@
     state int,
     timelate time,
     timeearly time);
+    -----
+    create table usertable (
+    uid int primary key not null,
+    id int not null,
+    name text not null, 
+    privilege text,
+    password text,
+    groupid text);
 
 
 ----------
