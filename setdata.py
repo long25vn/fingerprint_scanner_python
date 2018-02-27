@@ -12,20 +12,24 @@ import os
 from datetime import datetime, date, time
 import psycopg2
 
-
+#####connectDatabase####################################################
 conn = psycopg2.connect(database="postgres", user = "postgres", password = "123", host = "127.0.0.1", port = "5432")
+cur = conn.cursor()
 
 print "Opened database successfully"
-zk = zklib.ZKLib("192.168.1.201", 4370)
-ret = zk.connect()
-sys.path.append("zk")
-zkteco = None
-zkteco = ZK('192.168.1.201', port=4370, timeout=5)
-zkteco = zkteco.connect()
-print "connection to device:", ret
-cur = conn.cursor()
-zk.clearUser()
-tempstr1 = '2018-02-20'
+#####connectDevice####################################################
+# zk = zklib.ZKLib("192.168.1.201", 4370)
+# ret = zk.connect()
+# sys.path.append("zk")
+# zkteco = None
+# zkteco = ZK('192.168.1.201', port=4370, timeout=5)
+# zkteco = zkteco.connect()
+# print "connection to device:", ret
+
+#####clearUser####################################################
+# zk.clearUser()
+#########################################################
+tempstr1 = '2018-02-28'
 tempstr2 = '2018-02-22'
 tempstr3 = '2018-02-24'
 tempstr4 = '2018-02-26'
@@ -41,9 +45,17 @@ hela9 = time(9,30,00)
 hela10 = time(00,15,00)
 cur.execute("DELETE from usertable;") 
 cur.execute("DELETE from datatable;") 
-cur.execute("INSERT INTO usertable (uid,id,name,privilege) VALUES  (" + str(0) + "," + str(0) + "," + `str("Halo")` + "," + `str("User")` + ")" )
-print str("Halo")
-cur.execute("INSERT INTO datatable (numerical,id,name,DATE,point,timein,timeout,STATE,timelate) VALUES ("+  str(0) + "," +  str(0) + ",'" + str('testUser') + "'," + `tempstr1` + "," + `187` +"," + `str(hela1)` + "," +`str(hela3)` + "," + `1`+ "," + `str(hela2)` + ")" )
+cur.execute("INSERT INTO usertable (uid,id,name,privilege) VALUES  (" + str(1) + "," + str(1) + "," + `str("Halo")` + "," + `str("User")` + ")" )
+cur.execute("INSERT INTO usertable (uid,id,name,privilege) VALUES  (" + str(2) + "," + str(2) + "," + `str("Gengi")` + "," + `str("User")` + ")" )
+cur.execute("INSERT INTO usertable (uid,id,name,privilege) VALUES  (" + str(3) + "," + str(3) + "," + `str("Antonio")` + "," + `str("User")` + ")" )
+cur.execute("INSERT INTO usertable (uid,id,name,privilege) VALUES  (" + str(4) + "," + str(4) + "," + `str("Fermen")` + "," + `str("User")` + ")" )
+
+
+print str("Done")
+cur.execute("INSERT INTO datatable (numerical,id,name,DATE,point,timein,timeout,STATE,timelate) VALUES ("+  str(1) + "," +  str(1) + ",'" + str('Halo') + "'," + `tempstr3` + "," + `1` +"," + `str(hela1)` + "," +`str(hela3)` + "," + `1`+ "," + `str(hela2)` + ")" )
+cur.execute("INSERT INTO datatable (numerical,id,name,DATE,point,timein,timeout,STATE,timelate) VALUES ("+  str(2) + "," +  str(2) + ",'" + str('Gengi') + "'," + `tempstr3` + "," + `1` +"," + `str(hela1)` + "," +`str(hela3)` + "," + `1`+ "," + `str(hela2)` + ")" )
+cur.execute("INSERT INTO datatable (numerical,id,name,DATE,point,timein,timeout,STATE,timelate) VALUES ("+  str(3) + "," +  str(1) + ",'" + str('Halo') + "'," + `tempstr1` + "," + `100` +"," + `str(hela7)` + "," +`str(hela3)` + "," + `1`+ "," + `str(hela8)` + ")" )
+cur.execute("INSERT INTO datatable (numerical,id,name,DATE,point,timein,timeout,STATE,timelate) VALUES ("+  str(4) + "," +  str(2) + ",'" + str('Gengi') + "'," + `tempstr1` + "," + `10` +"," + `str(hela1)` + "," +`str(hela3)` + "," + `1`+ "," + `str(hela2)` + ")" )
 
 #cur.execute("DELETE from datatable;") 
 # for i in range(1, 5):
