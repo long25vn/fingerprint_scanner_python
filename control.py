@@ -183,7 +183,7 @@ def userOnline():
     datatable = cur.fetchall() 
     cur.execute("SELECT * FROM datatable WHERE date = " + `str(currentTime)` )
     datatemp = cur.fetchall() 
-    print currentTime 
+    print currentTime  
     print yesterday
     theDayBeforeYesterday = 0
     today = 0
@@ -193,8 +193,8 @@ def userOnline():
         y1.insert(0,(user[1],user[2],theDayBeforeYesterday,yesterday,today)) 
         for data in datatemp:
             if data[1] == user[1]:
-                print y1        
-        
+                y1.remove((user[1],user[2],theDayBeforeYesterday,yesterday,today))        
+    print y1
     return render_template('userOnline.html', userOnline = y, userOffnline = y1 )
  
 ######### auth ############################################
