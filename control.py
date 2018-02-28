@@ -15,7 +15,7 @@ import psycopg2
 from time import gmtime, strftime
 
 ########## ket noi database #########
-conn = psycopg2.connect(database="postgres", user = "postgres", password = "123", host = "127.0.0.1", port = "6000")
+conn = psycopg2.connect(database="postgres", user = "postgres", password = "123", host = "127.0.0.1", port = "5432")
 cur = conn.cursor()
 print "Database connected"
 
@@ -26,16 +26,20 @@ g = []
 
 ########## ket noi may cham cong #########
 zk = zklib.ZKLib("192.168.1.201", 4370)
-ret = zk.connect()
-sys.path.append("zk")
+statusConnect = zk.connect()
+attendance = None
+data_user = None
+zkteco_users = None
 zkteco = None
-zkteco = ZK('192.168.1.201', port=4370, timeout=5)
-zkteco = zkteco.connect()
-print "connection to device:", ret
-data_user = zk.getUser()
-zkteco_users = zkteco.get_users()
-attendance = zk.getAttendance()
-
+if statusConnect == True:
+    sys.path.append("zk")
+    zkteco = ZK('192.168.1.201', port=4370, timeout=2)
+    zkteco = zkteco.connect()
+    print "connection to device:", ret
+    data_user = zk.getUser()
+    zkteco_users = zkteco.get_users()
+    attendance = zk.getAttendance()
+print statusConnect
 ######### tao ung dung FLASK ###############################################
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -60,21 +64,24 @@ def forms():
             password=request.form['password']
             id =request.form['id']
             uid =request.form['uid']
-            if id != "" and name != "" and uid != "":
-                temp = 0
-                cur.execute("SELECT * FROM usertable ")
-                usertable = cur.fetchall()
-                for user in usertable:
-                    if int(user[1]) == int(id) or int(user[0]) == int(uid): 
-                        temp = 1
-                sleep (1)
-                if temp == 0:
-                    flash(' Welcome!  Name: ' + name + " ID:" + id)
-                    zkteco.set_user(uid=int(uid), name=str(name), privilege=const.USER_DEFAULT, password=str(password), group_id='', user_id=str(id))
-                elif temp == 1:
-                    flash ('UID or ID already exist')
-            else:  
-                flash('Error:Please type UID, ID, Name ')
+            if statusConnect == False:
+                flash ('Please connect to fingerprint scanner first !')
+            else:
+                if id != "" and name != "" and uid != "":
+                    temp = 0
+                    cur.execute("SELECT * FROM usertable ")
+                    usertable = cur.fetchall()
+                    for user in usertable:
+                        if int(user[1]) == int(id) or int(user[0]) == int(uid): 
+                            temp = 1
+                    sleep (1)
+                    if temp == 0:
+                        flash(' Welcome!  Name: ' + name + " ID:" + id)
+                        zkteco.set_user(uid=int(uid), name=str(name), privilege=const.USER_DEFAULT, password=str(password), group_id='', user_id=str(id))
+                    elif temp == 1:
+                        flash ('UID or ID already exist')
+                else:  
+                    flash('Error:Please type UID, ID, Name ')
         return render_template('create.html', form=form)
 ######### xoa user ###########################################################
 @app.route("/delete", methods=['GET', 'POST'])
@@ -87,18 +94,21 @@ def delete():
         if request.method == 'POST':
             name=request.form['name']
             id =request.form['id']
-            uid =request.form['uid'] 
-            if id != "" and uid != "" and name != "":
-                for user in zkteco_users:
-                    if int(user.user_id) == int(id): 
-                        flash ('UID:' + str(user.uid) + '. ID: ' + str(user.user_id) + '. Name: ' + str(user.name))
-                        zkteco.delete_user(uid=int(uid))
-                        flash(' Deleted!')
-                    else:
-                        flash(' ID does not exist!')
-                
-            elif id == "" or uid == "" or name == "":
-                flash(' Type ID and UID and name!')      
+            uid =request.form['uid']
+            if statusConnect == False:
+                flash ('Please connect to fingerprint scanner first !')
+            else: 
+                if id != "" and uid != "" and name != "":
+                    for user in zkteco_users:
+                        if int(user.user_id) == int(id): 
+                            flash ('UID:' + str(user.uid) + '. ID: ' + str(user.user_id) + '. Name: ' + str(user.name))
+                            zkteco.delete_user(uid=int(uid))
+                            flash(' Deleted!')
+                        else:
+                            flash(' ID does not exist!')
+                    
+                elif id == "" or uid == "" or name == "":
+                    flash(' Type ID and UID and name!')      
         return render_template('delete.html', form=form)
  
     
@@ -106,20 +116,20 @@ def delete():
 h = []
 @app.route("/showdata", methods=['GET', 'POST'])
 def showdata():
-    flash ('Connect to device:' + str(123))
+    flash ('Connect to device:' + str(statusConnect))
     h = []
     cur.execute("SELECT * FROM datatable ")
     rows3 = cur.fetchall()
     for data in rows3:
-        if 10 > data[4] >= 1:
+        if 1000 > data[4] >= 1:
 			data = list(data)
 			data[4] = 'co mat' 
 			data = tuple(data)
-        elif 100 > data[4] >= 10:
+        elif 1000000 > data[4] >= 1000:
 			data = list(data)
 			data[4] = 'nua ngay'
 			data = tuple(data)
-        elif data[4] >= 100:
+        elif data[4] >= 1000000:
 			data = list(data)
 			data[4] = 'ca ngay'
 			data = tuple(data)
@@ -152,9 +162,7 @@ def statistic():
         cur.execute("SELECT * FROM usertable")
         usertable = cur.fetchall() 
         if str(date) != "" and str(date1) != "":
-            flash(str(date)  + " - " + str(date1) ) 
-            
-
+            flash(str(date)  + " - " + str(date1) )             
             cur.execute("SELECT id, name, SUM(point), SUM(timelate) AS point FROM datatable WHERE date >= '" + str(date) + "' AND date <= '" + str(date1) + "' GROUP BY id, name ")
             dataselect = cur.fetchall()
             d1 = datetime.strptime(date1, "%m/%d/%Y")
@@ -174,8 +182,8 @@ def statistic():
                 k.append((user[1],user[2],"None","None",numberDay))
                 for data in dataselect:
                     data = list(data)
-                    all = str(data[2]/100)[:] + " ca ngay - " + str((data[2]%100)/10)[:] + " nua ngay - " + str((data[2]%100)%10)[:] + " quet thieu"
-                    nohere = numberDay - (int(data[2])/100 + int((data[2])%100)/10 + int((data[2])%100)%10)
+                    all = str(data[2]/1000000)[:] + " ca ngay - " + str((data[2]%1000000)/1000)[:] + " nua ngay - " + str((data[2]%1000000)%1000)[:] + " quet thieu"
+                    nohere = numberDay - (int(data[2])/1000000 + int((data[2])%1000000)/1000 + int((data[2])%1000000)%1000)
                     data = tuple(data) 
                     if user[1] == data[0]:
                         k.remove((user[1],user[2],"None","None",numberDay))
@@ -217,15 +225,15 @@ def userOnline():
         datatemp = cur.fetchall() 
 
         for data in datatemp:  
-            if 10 > data[4] >= 1:
+            if 1000 > data[4] >= 1:
                 data = list(data)
-                data[4] = 'hien co' 
+                data[4] = 'co mat' 
                 data = tuple(data)
-            elif 100 > data[4] >= 10:
+            elif 1000000 > data[4] >= 1000:
                 data = list(data)
                 data[4] = 'nua ngay'
                 data = tuple(data)
-            elif data[4] >= 100:
+            elif data[4] >= 1000000:
                 data = list(data)
                 data[4] = 'ca ngay'
                 data = tuple(data) 
@@ -248,20 +256,28 @@ def userOnline():
                 threedayago = data[0]
             for data in today:
                 today = data[0]
-            if threedayago == 100:
+            #
+            if threedayago == 1000000:
                 threedayago = "ca ngay"
+            elif threedayago == 1000:
+                threedayago = "nua ngay"
             elif not threedayago:
                 threedayago = "nghi"
-            if twodayago == 100:
+            #
+            if twodayago == 1000000:
                 twodayago = "ca ngay"
+            elif twodayago == 1000:
+                twodayago = "nua ngay"
             elif not twodayago:
                 twodayago = "nghi"
-            if onedayago == 100:
+            #
+            if onedayago == 1000000:
                 onedayago = "ca ngay"
-            elif onedayago == 10:
+            elif onedayago == 1000:
                 onedayago = "nua ngay"
             elif not onedayago:
                 onedayago = "nghi"
+                #
             if not today:
                 today = "nghi"
             y1.insert(0,(user[1],user[2],threedayago,twodayago,onedayago,today)) 
