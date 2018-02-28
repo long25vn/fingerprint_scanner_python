@@ -1,5 +1,5 @@
 <html lang="en">
-    <head>
+     <head>
       <meta charset="UTF-8">
       <title>User</title>
       <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
@@ -44,12 +44,12 @@
         <tr style="text-align:left">
             <th></th>
             <th>ID</th>
-            <th>Name</th>
-            <th>Date</th>
-            <th>Status</th>
-            <th>Time in</th>
-            <th>Time out</th>
-            <th>Late</th>
+            <th>Tên</th>
+            <th>Ngày</th>
+            <th>Trạng thái</th>
+            <th>Thời gian vào</th>
+            <th>Thời gian ra</th>
+            <th>Muộn</th>
         </tr>
       </thead>
       <tbody>
@@ -72,11 +72,12 @@
         <thead>
           <tr style="text-align:left">
             <th></th>
-            <th>UID</th>
             <th>ID</th>
-            <th>Name</th>
-            <th>Name</th>
-            <th>Name</th>
+            <th>Tên</th>
+            <th>3 ngày trước</th>
+            <th>2 ngày trước</th>
+            <th>1 ngày trước</th>
+            <th>Hôm nay</th>
           </tr>
         </thead>
         <tbody>
@@ -88,6 +89,7 @@
             <td>{{ a[2] }}</td>
             <td>{{ a[3] }}</td>
             <td>{{ a[4] }}</td>
+            <td>{{ a[5] }}</td>
           </tr>
           {% endfor %}
         </tbody>

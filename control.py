@@ -15,7 +15,7 @@ import psycopg2
 from time import gmtime, strftime
 
 ########## ket noi database #########
-conn = psycopg2.connect(database="postgres", user = "postgres", password = "123", host = "127.0.0.1", port = "5432")
+conn = psycopg2.connect(database="postgres", user = "postgres", password = "123", host = "127.0.0.1", port = "6000")
 cur = conn.cursor()
 print "Database connected"
 
@@ -25,16 +25,16 @@ z = []
 g = []
 
 ########## ket noi may cham cong #########
-# zk = zklib.ZKLib("192.168.1.201", 4370)
-# ret = zk.connect()
-# sys.path.append("zk")
-# zkteco = None
-# zkteco = ZK('192.168.1.201', port=4370, timeout=5)
-# zkteco = zkteco.connect()
-# print "connection to device:", ret
-# data_user = zk.getUser()
-# zkteco_users = zkteco.get_users()
-# attendance = zk.getAttendance()
+zk = zklib.ZKLib("192.168.1.201", 4370)
+ret = zk.connect()
+sys.path.append("zk")
+zkteco = None
+zkteco = ZK('192.168.1.201', port=4370, timeout=5)
+zkteco = zkteco.connect()
+print "connection to device:", ret
+data_user = zk.getUser()
+zkteco_users = zkteco.get_users()
+attendance = zk.getAttendance()
 
 ######### tao ung dung FLASK ###############################################
 app = Flask(__name__)
@@ -48,53 +48,58 @@ class ReusableForm(Form):
 
 
 ############### tao user #########################################
-# @app.route("/create", methods=['GET', 'POST'])
-# def forms():
-#     if not session.get('logged_in'):
-#         return render_template('login.html')
-#     else:
-#         form = ReusableForm(request.form)
-#         print form.errors
-#         if request.method == 'POST':
-#             name=request.form['name']
-#             password=request.form['password']
-#             id =request.form['id']
-#             uid =request.form['uid']
-#             if id != "" and name != "" and uid != "":
-#                 temp = 0
-#                 for user in zkteco_users:
-#                     if int(user.uid) == int(id) or int(user.user_id) == int(uid): 
-#                         temp = 1
-#                 sleep (1)
-#                 if temp == 0:
-#                     flash(' Welcome!  Name: ' + name + " ID:" + id)
-#                     zkteco.set_user(uid=int(uid), name=str(name), privilege=const.USER_DEFAULT, password=str(password), group_id='', user_id=str(id))
-#                 elif temp == 1:
-#                     flash ('UID or ID already exist')
-#             else:  
-#                 flash('Error:Please type UID, ID, Name ')
-#         return render_template('create.html', form=form)
+@app.route("/create", methods=['GET', 'POST'])
+def forms():
+    if not session.get('logged_in'):
+        return render_template('login.html')
+    else:
+        form = ReusableForm(request.form)
+        print form.errors
+        if request.method == 'POST':
+            name=request.form['name']
+            password=request.form['password']
+            id =request.form['id']
+            uid =request.form['uid']
+            if id != "" and name != "" and uid != "":
+                temp = 0
+                cur.execute("SELECT * FROM usertable ")
+                usertable = cur.fetchall()
+                for user in usertable:
+                    if int(user[1]) == int(id) or int(user[0]) == int(uid): 
+                        temp = 1
+                sleep (1)
+                if temp == 0:
+                    flash(' Welcome!  Name: ' + name + " ID:" + id)
+                    zkteco.set_user(uid=int(uid), name=str(name), privilege=const.USER_DEFAULT, password=str(password), group_id='', user_id=str(id))
+                elif temp == 1:
+                    flash ('UID or ID already exist')
+            else:  
+                flash('Error:Please type UID, ID, Name ')
+        return render_template('create.html', form=form)
 ######### xoa user ###########################################################
-# @app.route("/delete", methods=['GET', 'POST'])
-# def delete():
-#     if not session.get('logged_in'):
-#         return render_template('login.html')
-#     else:
-#         form = ReusableForm(request.form)
-#         print form.errors
-#         if request.method == 'POST':
-#             name=request.form['name']
-#             id =request.form['id']
-#             id1 =request.form['id1']
-#             uid =request.form['uid'] 
-#             if id != "":
-#                 for user in zkteco_users:
-#                     if int(user.user_id) == int(id): 
-#                         flash ('UID:' + str(user.uid) + '. ID: ' + str(user.user_id) + '. Name: ' + str(user.name))
-#             if id1 != "" and uid != "" and name != "":
-#                 flash(' Deleted!')
-#                 zkteco.delete_user(uid=int(uid))     
-#         return render_template('delete.html', form=form)
+@app.route("/delete", methods=['GET', 'POST'])
+def delete():
+    if not session.get('logged_in'):
+        return render_template('login.html')
+    else:
+        form = ReusableForm(request.form)
+        print form.errors
+        if request.method == 'POST':
+            name=request.form['name']
+            id =request.form['id']
+            uid =request.form['uid'] 
+            if id != "" and uid != "" and name != "":
+                for user in zkteco_users:
+                    if int(user.user_id) == int(id): 
+                        flash ('UID:' + str(user.uid) + '. ID: ' + str(user.user_id) + '. Name: ' + str(user.name))
+                        zkteco.delete_user(uid=int(uid))
+                        flash(' Deleted!')
+                    else:
+                        flash(' ID does not exist!')
+                
+            elif id == "" or uid == "" or name == "":
+                flash(' Type ID and UID and name!')      
+        return render_template('delete.html', form=form)
  
     
 ######### show data update ########################################################################
@@ -108,15 +113,15 @@ def showdata():
     for data in rows3:
         if 10 > data[4] >= 1:
 			data = list(data)
-			data[4] = 'at' 
+			data[4] = 'co mat' 
 			data = tuple(data)
         elif 100 > data[4] >= 10:
 			data = list(data)
-			data[4] = 'half day'
+			data[4] = 'nua ngay'
 			data = tuple(data)
         elif data[4] >= 100:
 			data = list(data)
-			data[4] = 'full day'
+			data[4] = 'ca ngay'
 			data = tuple(data)
         data = list(data)
         data = tuple(data) 
@@ -129,28 +134,53 @@ def get():
     form = ReusableForm(request.form)
     print form.errors
     return render_template('get.html', form=form)
-       
+   
 ########## hien thi thong ke #######################################################################
 k= []
 @app.route("/statistic", methods=['GET', 'POST'])
 def statistic():
-    k= []
+    import datetime
+    from datetime import datetime, date
     form = ReusableForm(request.form)
+    k= []
     print form.errors 
     if request.method == 'POST':
         name=request.form['name']
         id =request.form['id']
         date = request.form['date']
         date1 = request.form['date1']
-        if str(date) != "" and str(date1) != "":    
+        cur.execute("SELECT * FROM usertable")
+        usertable = cur.fetchall() 
+        if str(date) != "" and str(date1) != "":
             flash(str(date)  + " - " + str(date1) ) 
+            
+
             cur.execute("SELECT id, name, SUM(point), SUM(timelate) AS point FROM datatable WHERE date >= '" + str(date) + "' AND date <= '" + str(date1) + "' GROUP BY id, name ")
-            rows3 = cur.fetchall()
-            for data in rows3:
-                data = list(data)
-                data[2] = str(data[2]/100)[:] + " ngay - " + str((data[2]%100)/10)[:] + " sang/chieu - " + str((data[2]%100)%10)[:] + " quet thieu"
-                data = tuple(data) 
-                k.insert(0,(data[0],data[1],data[2],data[3]))
+            dataselect = cur.fetchall()
+            d1 = datetime.strptime(date1, "%m/%d/%Y")
+            d = datetime.strptime(date, "%m/%d/%Y")
+            numberDay = 0
+            ## loc thu 7 chu nhat ##############################
+            def daterange(start_date, end_date):
+                for n in range(int ((end_date - start_date).days)+1):
+                    yield start_date + timedelta(n)
+            for single_date in daterange(d, d1):
+                if 2 <= (single_date.weekday()+2) <= 6:
+                    numberDay += 1
+                    print single_date.strftime("%Y-%m-%d")
+                    print str(single_date.weekday()+2) + "-thu"
+            ##### tong so ngay tu From den To ########################
+            for user in usertable:
+                k.append((user[1],user[2],"None","None",numberDay))
+                for data in dataselect:
+                    data = list(data)
+                    all = str(data[2]/100)[:] + " ca ngay - " + str((data[2]%100)/10)[:] + " nua ngay - " + str((data[2]%100)%10)[:] + " quet thieu"
+                    nohere = numberDay - (int(data[2])/100 + int((data[2])%100)/10 + int((data[2])%100)%10)
+                    data = tuple(data) 
+                    if user[1] == data[0]:
+                        k.remove((user[1],user[2],"None","None",numberDay))
+                        k.insert(0,(data[0],data[1],all,data[3],nohere))
+
     return render_template('statistic.html', statistic = k)
 ######### list user ############################################
 @app.route('/user/') 
@@ -165,37 +195,81 @@ def user():
             y.insert(0,(data[0],data[1],data[2],data[3]))
         return render_template('user.html', user=y)
 
-######### list user ############################################
+######### danh sach hoc vien hien tai ############################################
 import datetime
 from datetime import date, timedelta
 @app.route('/useronline/') 
 def userOnline():
-    # ifs not session.get('logged_in'):
-    #     return render_template('login.html')
-    # else:
-    y = []
-    y1 = []
-    currentTime = datetime.datetime.now().strftime ("%Y-%m-%d")
-    yesterday = date.today() - timedelta(1)
-    cur.execute("SELECT * FROM usertable")
-    usertable = cur.fetchall() 
-    cur.execute("SELECT * FROM datatable")
-    datatable = cur.fetchall() 
-    cur.execute("SELECT * FROM datatable WHERE date = " + `str(currentTime)` )
-    datatemp = cur.fetchall() 
-    print currentTime  
-    print yesterday
-    theDayBeforeYesterday = 0
-    today = 0
-    for data in datatemp:
-        y.insert(0,(data[0],data[1],data[2],data[3],data[4],data[5],data[6],data[7],data[8]))
-    for user in usertable:
-        y1.insert(0,(user[1],user[2],theDayBeforeYesterday,yesterday,today)) 
-        for data in datatemp:
-            if data[1] == user[1]:
-                y1.remove((user[1],user[2],theDayBeforeYesterday,yesterday,today))        
-    print y1
-    return render_template('userOnline.html', userOnline = y, userOffnline = y1 )
+    if not session.get('logged_in'):
+        return render_template('login.html')
+    else:
+        y = []
+        y1 = []
+        currentTime = datetime.datetime.now().strftime ("%Y-%m-%d")
+        onedayagoTime = date.today() - timedelta(1)
+        twodayagoTime = date.today() - timedelta(2)
+        threedayagoTime = date.today() - timedelta(3)
+        cur.execute("SELECT * FROM usertable")
+        usertable = cur.fetchall() 
+        cur.execute("SELECT * FROM datatable")
+        datatable = cur.fetchall() 
+        cur.execute("SELECT * FROM datatable WHERE date = " + `str(currentTime)` )
+        datatemp = cur.fetchall() 
+
+        for data in datatemp:  
+            if 10 > data[4] >= 1:
+                data = list(data)
+                data[4] = 'hien co' 
+                data = tuple(data)
+            elif 100 > data[4] >= 10:
+                data = list(data)
+                data[4] = 'nua ngay'
+                data = tuple(data)
+            elif data[4] >= 100:
+                data = list(data)
+                data[4] = 'ca ngay'
+                data = tuple(data) 
+            y.insert(0,(data[0],data[1],data[2],data[3],data[4],data[5],data[6],data[7],data[8]))
+        #### thong ke 3 ngay gan day #######################################
+        for user in usertable:
+            threedayago = cur.execute("SELECT point FROM datatable WHERE (date,id)  = " + " ( "+ `str(threedayagoTime)` +"," + str(user[1]) + ")" )        
+            threedayago = cur.fetchall()
+            twodayago = cur.execute("SELECT point FROM datatable WHERE (date,id)  = " + " ( "+ `str(twodayagoTime)` +"," + str(user[1]) + ")" )        
+            twodayago = cur.fetchall()
+            onedayago = cur.execute("SELECT point FROM datatable WHERE (date,id)  = " + " ( "+ `str(onedayagoTime)` +"," + str(user[1]) + ")" )        
+            onedayago = cur.fetchall()
+            today = cur.execute("SELECT point FROM datatable WHERE (date,id)  = " + " ( "+ `str(currentTime)` +"," + str(user[1]) + ")" )     
+            today = cur.fetchall()
+            for data in twodayago:
+                twodayago = data[0]
+            for data in onedayago:
+                onedayago = data[0]
+            for data in threedayago:
+                threedayago = data[0]
+            for data in today:
+                today = data[0]
+            if threedayago == 100:
+                threedayago = "ca ngay"
+            elif not threedayago:
+                threedayago = "nghi"
+            if twodayago == 100:
+                twodayago = "ca ngay"
+            elif not twodayago:
+                twodayago = "nghi"
+            if onedayago == 100:
+                onedayago = "ca ngay"
+            elif onedayago == 10:
+                onedayago = "nua ngay"
+            elif not onedayago:
+                onedayago = "nghi"
+            if not today:
+                today = "nghi"
+            y1.insert(0,(user[1],user[2],threedayago,twodayago,onedayago,today)) 
+
+            for data in datatemp:
+                if data[1] == user[1]:
+                    y1.remove((user[1],user[2],threedayago,twodayago,onedayago,today))        
+        return render_template('userOnline.html', userOnline = y, userOffnline = y1 )
  
 ######### auth ############################################
 @app.route('/auth')

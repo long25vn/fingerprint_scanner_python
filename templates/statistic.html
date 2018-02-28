@@ -138,6 +138,7 @@
         <th>Tên</th>
         <th>Tổng số ngày đi học</th>
         <th>Tổng thời gian đi muộn</th>
+        <th>Số ngày nghỉ</th>
       </tr>
     </thead>
 
@@ -149,6 +150,7 @@
         <td>{{ a[1] }}</td>
         <td>{{ a[2] }}</td>
         <td>{{ a[3] }}</td>
+        <td>{{ a[4] }}</td>
       </tr>
       {% endfor %}
     </tbody>
@@ -189,7 +191,7 @@
       <p>Mỗi ngày các bạn quét 2 lần: lúc đến lớp và lúc ra về. (Time in và time out)</p>
       <p>Nếu quét sau 09:00:00, 14:00:00 sẽ tính thời gian đi muộn.</p>
       <p><b>Tổng thời gian từ lúc đến lớp và lúc ra về: (Timeout trừ timein)</b></p>
-      <p style="text-indent: 50px;">Nếu lớn hơn 3h sẽ tính một buổi sáng/chiều. </p>
+      <p style="text-indent: 50px;">Nếu lớn hơn 3h sẽ tính nửa ngày. </p>
       <p style="text-indent: 50px;">Nếu lớn hơn 8h sẽ tính cả ngày (cộng cả 2 tiếng nghỉ trưa).</p>
       <p style="text-indent: 50px;">Nếu nhỏ hơn 3h hoặc quên không quét lúc đến lớp hoặc lúc ra về sẽ tính là quét thiếu.</p>
       

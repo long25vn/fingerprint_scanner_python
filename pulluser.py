@@ -14,7 +14,7 @@ from datetime import datetime, date, time
 import psycopg2
 
 while True:
-    conn = psycopg2.connect(database="postgres", user = "postgres", password = "123", host = "127.0.0.1", port = "5432")
+    conn = psycopg2.connect(database="postgres", user = "postgres", password = "123", host = "127.0.0.1", port = "6000")
     cur = conn.cursor()
     print "Opened database successfully"
 
@@ -33,11 +33,11 @@ while True:
     data_user = zk.getUser()
     zkteco_users = zkteco.get_users()
     cur.execute("DELETE from usertable;") 
+
     for user in zkteco_users:
         privilege = 'User'
         if user.privilege == const.USER_ADMIN:
             privilege = 'Admin'
-
         uid = format(user.uid)
         name = format(user.name)
         privilege = format(privilege)
