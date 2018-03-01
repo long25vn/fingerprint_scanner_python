@@ -48,4 +48,4 @@ while True:
         cur.execute("INSERT INTO usertable (uid,id,name,privilege) VALUES  (" + str(uid) + "," + str(id) + "," + `str(name)` + "," + `str(privilege)` + ")" )
         conn.commit()
     print ("jnla")
-    sleep (5)
+    sleep (3)

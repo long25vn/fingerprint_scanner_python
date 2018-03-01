@@ -15,7 +15,7 @@ import psycopg2
 from time import gmtime, strftime
 
 ########## ket noi database #########
-conn = psycopg2.connect(database="postgres", user = "postgres", password = "123", host = "127.0.0.1", port = "5432")
+conn = psycopg2.connect(database="postgres", user = "postgres", password = "123", host = "127.0.0.1", port = "6000")
 cur = conn.cursor()
 print "Database connected"
 
@@ -35,7 +35,7 @@ if statusConnect == True:
     sys.path.append("zk")
     zkteco = ZK('192.168.1.201', port=4370, timeout=2)
     zkteco = zkteco.connect()
-    print "connection to device:", ret
+    print "connection to device:", statusConnect
     data_user = zk.getUser()
     zkteco_users = zkteco.get_users()
     attendance = zk.getAttendance()
@@ -74,10 +74,10 @@ def forms():
                     for user in usertable:
                         if int(user[1]) == int(id) or int(user[0]) == int(uid): 
                             temp = 1
-                    sleep (1)
                     if temp == 0:
-                        flash(' Welcome!  Name: ' + name + " ID:" + id)
                         zkteco.set_user(uid=int(uid), name=str(name), privilege=const.USER_DEFAULT, password=str(password), group_id='', user_id=str(id))
+                        sleep (2)
+                        flash(' Welcome!  Name: ' + name + " ID:" + id)
                     elif temp == 1:
                         flash ('UID or ID already exist')
                 else:  
@@ -91,6 +91,8 @@ def delete():
     else:
         form = ReusableForm(request.form)
         print form.errors
+        cur.execute("SELECT * FROM usertable")
+        usertable = cur.fetchall() 
         if request.method == 'POST':
             name=request.form['name']
             id =request.form['id']
@@ -99,14 +101,12 @@ def delete():
                 flash ('Please connect to fingerprint scanner first !')
             else: 
                 if id != "" and uid != "" and name != "":
-                    for user in zkteco_users:
-                        if int(user.user_id) == int(id): 
-                            flash ('UID:' + str(user.uid) + '. ID: ' + str(user.user_id) + '. Name: ' + str(user.name))
+                    for user in usertable:
+                        if int(user[0]) == int(uid): 
+                            flash ('UID:' + str(user[0]) + '. ID: ' + str(user[1]) + '. Name: ' + str(user[2]))
                             zkteco.delete_user(uid=int(uid))
+                            sleep (2.5)
                             flash(' Deleted!')
-                        else:
-                            flash(' ID does not exist!')
-                    
                 elif id == "" or uid == "" or name == "":
                     flash(' Type ID and UID and name!')      
         return render_template('delete.html', form=form)
@@ -299,8 +299,6 @@ def home():
 def do_admin_login():
     if request.form['password'] == 'password' and request.form['username'] == 'admin':
         session['logged_in'] = True
-    else:
-        flash('wrong password!')
     return home()
 
 @app.route("/logout")

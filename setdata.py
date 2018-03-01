@@ -13,7 +13,7 @@ from datetime import datetime, date, time
 import psycopg2
 
 #####connectDatabase####################################################
-conn = psycopg2.connect(database="postgres", user = "postgres", password = "123", host = "127.0.0.1", port = "5432")
+conn = psycopg2.connect(database="postgres", user = "postgres", password = "123", host = "127.0.0.1", port = "6000")
 cur = conn.cursor()
 
 print "Opened database successfully"
@@ -57,8 +57,8 @@ cur.execute("INSERT INTO usertable (uid,id,name,privilege) VALUES  (" + str(4) +
 print str("Done")
 cur.execute("INSERT INTO datatable (numerical,id,name,DATE,point,timein,timeout,STATE,timelate) VALUES ("+  str(1) + "," +  str(1) + ",'" + str('Halo') + "'," + `tempstr3` + "," + `1` +"," + `str(hela1)` + "," +`str(hela3)` + "," + `1`+ "," + `str(hela2)` + ")" )
 cur.execute("INSERT INTO datatable (numerical,id,name,DATE,point,timein,timeout,STATE,timelate) VALUES ("+  str(2) + "," +  str(2) + ",'" + str('Gengi') + "'," + `tempstr3` + "," + `1` +"," + `str(hela1)` + "," +`str(hela3)` + "," + `1`+ "," + `str(hela2)` + ")" )
-cur.execute("INSERT INTO datatable (numerical,id,name,DATE,point,timein,timeout,STATE,timelate) VALUES ("+  str(3) + "," +  str(1) + ",'" + str('Halo') + "'," + `tempstr1` + "," + `100` +"," + `str(hela7)` + "," +`str(hela3)` + "," + `1`+ "," + `str(hela8)` + ")" )
-cur.execute("INSERT INTO datatable (numerical,id,name,DATE,point,timein,timeout,STATE,timelate) VALUES ("+  str(4) + "," +  str(2) + ",'" + str('Gengi') + "'," + `tempstr1` + "," + `10` +"," + `str(hela1)` + "," +`str(hela3)` + "," + `1`+ "," + `str(hela2)` + ")" )
+cur.execute("INSERT INTO datatable (numerical,id,name,DATE,point,timein,timeout,STATE,timelate) VALUES ("+  str(3) + "," +  str(1) + ",'" + str('Halo') + "'," + `tempstr1` + "," + `1000` +"," + `str(hela7)` + "," +`str(hela3)` + "," + `1`+ "," + `str(hela8)` + ")" )
+cur.execute("INSERT INTO datatable (numerical,id,name,DATE,point,timein,timeout,STATE,timelate) VALUES ("+  str(4) + "," +  str(2) + ",'" + str('Gengi') + "'," + `tempstr1` + "," + `1000` +"," + `str(hela1)` + "," +`str(hela3)` + "," + `1`+ "," + `str(hela2)` + ")" )
 cur.execute("INSERT INTO datatable (numerical,id,name,DATE,point,timein,timeout,STATE,timelate) VALUES ("+  str(5) + "," +  str(4) + ",'" + str('Fermen') + "'," + `tempstr4` + "," + `1000000` +"," + `str(hela1)` + "," +`str(hela3)` + "," + `1`+ "," + `str(hela2)` + ")" )
 
 #cur.execute("DELETE from datatable;") 
