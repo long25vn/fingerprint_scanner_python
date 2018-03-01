@@ -41,9 +41,9 @@ while True:
                     if int(data_user[uid][0]) == int(lattendance[0]):
                         timerequest = datetime.combine(date.min, lattendance[2].time())
                         timein = datetime.combine(date.min, datetime.time(datetime.strptime('09:00:00', '%H:%M:%S')))
-                        timedefault1 = datetime.combine(date.min, datetime.time(datetime.strptime('09:15:00', '%H:%M:%S')))
+                        timedefault1 = datetime.combine(date.min, datetime.time(datetime.strptime('09:00:00', '%H:%M:%S')))
                         timedefault2 = datetime.combine(date.min, datetime.time(datetime.strptime('11:45:00', '%H:%M:%S')))
-                        timedefault3 = datetime.combine(date.min, datetime.time(datetime.strptime('14:15:00', '%H:%M:%S')))
+                        timedefault3 = datetime.combine(date.min, datetime.time(datetime.strptime('14:00:00', '%H:%M:%S')))
                         timedefault4 = datetime.combine(date.min, datetime.time(datetime.strptime('17:45:00', '%H:%M:%S')))
                         timedefault5 = datetime.combine(date.min, datetime.time(datetime.strptime('03:00:00', '%H:%M:%S')))
                         timedefault6 = datetime.combine(date.min, datetime.time(datetime.strptime('08:00:00', '%H:%M:%S')))
