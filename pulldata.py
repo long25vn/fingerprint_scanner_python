@@ -56,15 +56,15 @@ while True:
                         cur.execute("SELECT id,timein,timeout from datatable WHERE (id,date) = " + "(" + `lattendance[0]` + "," + `str(lattendance[2].date())` + ")" )
                         rowss = cur.fetchall() 
                         if (rowss != []):
-                            halftime = time(03,00,00)
+                            halftime = time(3,00,00)
                             fulltime = time(8,00,00)    
                             timesub = timerequest - datetime.combine(date.min, rowss[0][1])
                             f = (datetime.min + timesub).time()
                             point = 1
                             if f >= fulltime:
-                                point = 100
+                                point = 1000000
                             elif fulltime > f >= halftime:
-                                point = 10
+                                point = 1000
                             cur.execute("UPDATE datatable set (point,timeout) = (" +  `point` + "," + `str(timerequest)` + ") where (id,date) = " + "(" + `lattendance[0]` + "," + `str(lattendance[2].date())` + ")" )
                             conn.commit()    
                             zk.clearAttendance()
