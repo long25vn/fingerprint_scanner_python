@@ -41,7 +41,6 @@ while True:
         uid = format(user.uid)
         name = format(user.name)
         privilege = format(privilege)
-        print privilege
         password = format(user.password)
         group = format(user.group_id)
         id = format(user.user_id)

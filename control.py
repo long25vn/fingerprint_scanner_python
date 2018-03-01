@@ -76,7 +76,6 @@ def forms():
                             temp = 1
                     if temp == 0:
                         zkteco.set_user(uid=int(uid), name=str(name), privilege=const.USER_DEFAULT, password=str(password), group_id='', user_id=str(id))
-                        sleep (2)
                         flash(' Welcome!  Name: ' + name + " ID:" + id)
                     elif temp == 1:
                         flash ('UID or ID already exist')
@@ -97,18 +96,25 @@ def delete():
             name=request.form['name']
             id =request.form['id']
             uid =request.form['uid']
+            tempdelete = 0
             if statusConnect == False:
                 flash ('Please connect to fingerprint scanner first !')
             else: 
                 if id != "" and uid != "" and name != "":
                     for user in usertable:
-                        if int(user[0]) == int(uid): 
-                            flash ('UID:' + str(user[0]) + '. ID: ' + str(user[1]) + '. Name: ' + str(user[2]))
-                            zkteco.delete_user(uid=int(uid))
-                            sleep (2.5)
-                            flash(' Deleted!')
+                        if int(user[0]) == int(uid):
+                            tempdelete = 1
+                        else: 
+                            tempdelete = 2    
                 elif id == "" or uid == "" or name == "":
-                    flash(' Type ID and UID and name!')      
+                    flash(' Type ID and UID and name!')  
+            if tempdelete == 2:
+                flash(' ID and UID does not exist')
+            elif tempdelete == 1:
+                zkteco.delete_user(uid=int(uid))
+                flash ('UID:' + str(user[0]) + '. ID: ' + str(user[1]) + '. Name: ' + str(user[2]))
+                flash(' Deleted!')
+
         return render_template('delete.html', form=form)
  
     
