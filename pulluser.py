@@ -18,33 +18,32 @@ while True:
     cur = conn.cursor()
     print "Opened database successfully"
 
-    y = []
-    z = []
-    g = []
-
     ########## connect to device #########
     zk = zklib.ZKLib("192.168.1.201", 4370)
     ret = zk.connect()
-    sys.path.append("zk")
-    zkteco = None
-    zkteco = ZK('192.168.1.201', port=4370, timeout=5)
-    zkteco = zkteco.connect()
-    print "connection to device:", ret
-    data_user = zk.getUser()
-    zkteco_users = zkteco.get_users()
-    cur.execute("DELETE from usertable;") 
+    if ret == True:
+        print "connected to device"
+        sys.path.append("zk")
+        zkteco = None
+        zkteco = ZK('192.168.1.201', port=4370, timeout=5)
+        zkteco = zkteco.connect()
+        data_user = zk.getUser()
+        zkteco_users = zkteco.get_users()
+        cur.execute("DELETE from usertable;") 
 
-    for user in zkteco_users:
-        privilege = 'User'
-        if user.privilege == const.USER_ADMIN:
-            privilege = 'Admin'
-        uid = format(user.uid)
-        name = format(user.name)
-        privilege = format(privilege)
-        password = format(user.password)
-        group = format(user.group_id)
-        id = format(user.user_id)
-        cur.execute("INSERT INTO usertable (uid,id,name,privilege) VALUES  (" + str(uid) + "," + str(id) + "," + `str(name)` + "," + `str(privilege)` + ")" )
-        conn.commit()
-    print ("jnla")
-    sleep (3)
+        for user in zkteco_users:
+            privilege = 'User'
+            if user.privilege == const.USER_ADMIN:
+                privilege = 'Admin'
+            uid = format(user.uid)
+            name = format(user.name)
+            privilege = format(privilege)
+            password = format(user.password)
+            group = format(user.group_id)
+            id = format(user.user_id)
+            cur.execute("INSERT INTO usertable (uid,id,name,privilege) VALUES  (" + str(uid) + "," + str(id) + "," + `str(name)` + "," + `str(privilege)` + ")" )
+            conn.commit()
+        print ("done")
+        sleep (3)
+    else:
+        print "Device Disconect"
