@@ -45,32 +45,14 @@ hela9 = time(9,30,00)
 hela10 = time(00,15,00)
 password = '123456'
 cur.execute("DELETE from usertable;") 
-cur.execute("DELETE from datatable;") 
 cur.execute("INSERT INTO usertable (uid,id,name,privilege) VALUES  (" + str(1) + "," + str(1) + "," + `str("Halo")` + "," + `str("User")` + ")" )
 cur.execute("INSERT INTO usertable (uid,id,name,privilege) VALUES  (" + str(2) + "," + str(2) + "," + `str("Gengi")` + "," + `str("User")` + ")" )
 cur.execute("INSERT INTO usertable (uid,id,name,privilege) VALUES  (" + str(3) + "," + str(3) + "," + `str("Antonio")` + "," + `str("User")` + ")" )
 cur.execute("INSERT INTO usertable (uid,id,name,privilege) VALUES  (" + str(4) + "," + str(4) + "," + `str("Fermen")` + "," + `str("User")` + ")" )
-# zkteco.set_user(uid=int(1), name=str("Halo"), privilege=const.USER_DEFAULT, password=str(password), group_id='', user_id=str(1))
-# zkteco.set_user(uid=int(2), name=str("Gengi"), privilege=const.USER_DEFAULT, password=str(password), group_id='', user_id=str(2))
-# zkteco.set_user(uid=int(3), name=str("Antonio"), privilege=const.USER_DEFAULT, password=str(password), group_id='', user_id=str(3))
-# zkteco.set_user(uid=int(4), name=str("Fermen"), privilege=const.USER_DEFAULT, password=str(password), group_id='', user_id=str(4))
 print str("Done")
-cur.execute("INSERT INTO datatable (numerical,id,name,DATE,point,timein,timeout,STATE,timelate) VALUES ("+  str(1) + "," +  str(1) + ",'" + str('Halo') + "'," + `tempstr3` + "," + `1` +"," + `str(hela1)` + "," +`str(hela3)` + "," + `1`+ "," + `str(hela2)` + ")" )
-cur.execute("INSERT INTO datatable (numerical,id,name,DATE,point,timein,timeout,STATE,timelate) VALUES ("+  str(2) + "," +  str(2) + ",'" + str('Gengi') + "'," + `tempstr3` + "," + `1` +"," + `str(hela1)` + "," +`str(hela3)` + "," + `1`+ "," + `str(hela2)` + ")" )
-cur.execute("INSERT INTO datatable (numerical,id,name,DATE,point,timein,timeout,STATE,timelate) VALUES ("+  str(3) + "," +  str(1) + ",'" + str('Halo') + "'," + `tempstr1` + "," + `1000` +"," + `str(hela7)` + "," +`str(hela3)` + "," + `1`+ "," + `str(hela8)` + ")" )
-cur.execute("INSERT INTO datatable (numerical,id,name,DATE,point,timein,timeout,STATE,timelate) VALUES ("+  str(4) + "," +  str(2) + ",'" + str('Gengi') + "'," + `tempstr1` + "," + `1000` +"," + `str(hela1)` + "," +`str(hela3)` + "," + `1`+ "," + `str(hela2)` + ")" )
-cur.execute("INSERT INTO datatable (numerical,id,name,DATE,point,timein,timeout,STATE,timelate) VALUES ("+  str(5) + "," +  str(4) + ",'" + str('Fermen') + "'," + `tempstr4` + "," + `1000000` +"," + `str(hela1)` + "," +`str(hela3)` + "," + `1`+ "," + `str(hela2)` + ")" )
-
-#cur.execute("DELETE from datatable;") 
-# for i in range(1, 5):
-# 	cur.execute("INSERT INTO datatable (numerical,id,name,DATE,point,timein,timeout,STATE,timelate) VALUES ("+  str(i) + "," +  str(1) + ",'" + str('Henry') + "'," + `tempstr1` + "," + `187` +"," + `str(hela1)` + "," +`str(hela3)` + "," + `1`+ "," + `str(hela2)` + ")" )
-# for i in range(5, 10):
-# 	cur.execute("INSERT INTO datatable (numerical,id,name,DATE,point,timein,timeout,STATE,timelate) VALUES ("+  str(i) + "," +  str(2) + ",'" + str('Alex') + "'," + `tempstr2` + "," + `121` +"," + `str(hela5)` + "," +`str(hela3)` + "," + `1`+ "," + `str(hela6)` + ")" )
-# for i in range(10, 15):
-# 	cur.execute("INSERT INTO datatable (numerical,id,name,DATE,point,timein,timeout,STATE,timelate) VALUES ("+  str(i) + "," +  str(3) + ",'" + str('Bobby') + "'," + `tempstr3` + "," + `162` +"," + `str(hela7)` + "," +`str(hela3)` + "," + `1`+ "," + `str(hela8)` + ")" )
-# for i in range(16, 20):
-# 	cur.execute("INSERT INTO datatable (numerical,id,name,DATE,point,timein,timeout,STATE,timelate) VALUES ("+  str(i) + "," +  str(4) + ",'" + str('Chaly') + "'," + `tempstr4` + "," + `83` +"," + `str(hela9)` + "," +`str(hela3)` + "," + `1`+ "," + `str(hela10)` + ")" )
-# # for i in range(1, 80):
-# #     zkteco.set_user(uid=i, name='Fanani M. Ihsan', privilege=const.USER_DEFAULT, password='', group_id='', user_id=str(i))
-
+cur.execute("INSERT INTO datatable2 (id,name,DATE,point,timein,timeout,STATE,timelate) VALUES ("+  str(1) + ",'" + str('Halo') + "'," + `tempstr3` + "," + `1` +"," + `str(hela1)` + "," +`str(hela3)` + "," + `1`+ "," + `str(hela2)` + ")" )
+cur.execute("INSERT INTO datatable2 (id,name,DATE,point,timein,timeout,STATE,timelate) VALUES ("+  str(2) + ",'" + str('Gengi') + "'," + `tempstr3` + "," + `1` +"," + `str(hela1)` + "," +`str(hela3)` + "," + `1`+ "," + `str(hela2)` + ")" )
+cur.execute("INSERT INTO datatable2 (id,name,DATE,point,timein,timeout,STATE,timelate) VALUES ("+  str(1) + ",'" + str('Halo') + "'," + `tempstr1` + "," + `1000` +"," + `str(hela7)` + "," +`str(hela3)` + "," + `1`+ "," + `str(hela8)` + ")" )
+cur.execute("INSERT INTO datatable2 (id,name,DATE,point,timein,timeout,STATE,timelate) VALUES ("+  str(2) + ",'" + str('Gengi') + "'," + `tempstr1` + "," + `1000` +"," + `str(hela1)` + "," +`str(hela3)` + "," + `1`+ "," + `str(hela2)` + ")" )
+cur.execute("INSERT INTO datatable2 (id,name,DATE,point,timein,timeout,STATE,timelate) VALUES ("+  str(4) + ",'" + str('Fermen') + "'," + `tempstr4` + "," + `1000000` +"," + `str(hela1)` + "," +`str(hela3)` + "," + `1`+ "," + `str(hela2)` + ")" )
 conn.commit()  

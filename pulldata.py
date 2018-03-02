@@ -54,7 +54,7 @@ while True:
                             elif (timedefault3 < timerequest < timedefault4):
                                 timelate = timerequest - timedefault3
 
-                            cur.execute("SELECT id,timein,timeout from datatable WHERE (id,date) = " + "(" + `lattendance[0]` + "," + `str(lattendance[2].date())` + ")" )
+                            cur.execute("SELECT id,timein,timeout from datatable2 WHERE (id,date) = " + "(" + `lattendance[0]` + "," + `str(lattendance[2].date())` + ")" )
                             rowss = cur.fetchall() 
                             if (rowss != []):
                                 halftime = time(3,00,00)
@@ -66,14 +66,11 @@ while True:
                                     point = 1000000
                                 elif fulltime > f >= halftime:
                                     point = 1000
-                                cur.execute("UPDATE datatable set (point,timeout) = (" +  `point` + "," + `str(timerequest)` + ") where (id,date) = " + "(" + `lattendance[0]` + "," + `str(lattendance[2].date())` + ")" )
+                                cur.execute("UPDATE datatable2 set (point,timeout) = (" +  `point` + "," + `str(timerequest)` + ") where (id,date) = " + "(" + `lattendance[0]` + "," + `str(lattendance[2].date())` + ")" )
                                 conn.commit()    
                                 zk.clearAttendance()
                             elif (rowss == []):   
-                                cur.execute("SELECT numerical from datatable WHERE numerical=(select max(numerical) from datatable)")
-                                rows = cur.fetchall()
-                                numerical =  int(rows[0][0]) + 1
-                                cur.execute("INSERT INTO datatable (numerical,id,name,DATE,point,timein,STATE,timelate) VALUES \
+                                cur.execute("INSERT INTO datatable2 (numerical,id,name,DATE,point,timein,STATE,timelate) VALUES \
                                 ("+  `numerical` + "," +  `lattendance[0]` + "," + `data_user[uid][1]` + "," + `str(lattendance[2].date())` + "," + `1` + ","+ \
                                 `str(timerequest)` + "," + `str(lattendance[1])` + "," + `str(timelate)` +")")
                                 conn.commit()

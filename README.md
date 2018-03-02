@@ -43,7 +43,9 @@
 ### chạy ứng dụng
     git clone https://github.com/long25vn/fingerprint_scanner_python.git
     cd fingerprint_scanner_python/
-    ./run.sh
+    python pulldata.py
+    python pulluser.py
+    python control.py
 
 file pushdata chạy liên tục để đẩy dữ liệu trên máy chấm công về cơ sở dữ liệu, file control.py đọc dữ liệu trong cơ sở dữ liệu và hiển thị.
 
