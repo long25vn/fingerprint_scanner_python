@@ -11,7 +11,7 @@
     docker exec -it -u postgres db psql 
 	-----
     create table datatable (
-    numerical int primary key not null,
+    numerical serial primary key not null,
     id int not null,
     name text not null, 
     date date not null,
