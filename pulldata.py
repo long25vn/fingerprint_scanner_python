@@ -70,7 +70,7 @@ while True:
                                 conn.commit()    
                                 zk.clearAttendance()
                             elif (rowss == []):   
-                                cur.execute("INSERT INTO datatable id,name,DATE,point,timein,STATE,timelate) VALUES \
+                                cur.execute("INSERT INTO datatable (id,name,DATE,point,timein,STATE,timelate) VALUES \
                                 ("+  `lattendance[0]` + "," + `data_user[uid][1]` + "," + `str(lattendance[2].date())` + "," + `1` + ","+ \
                                 `str(timerequest)` + "," + `str(lattendance[1])` + "," + `str(timelate)` +")")
                                 conn.commit()
